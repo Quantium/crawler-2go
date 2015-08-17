@@ -1,7 +1,7 @@
 'use strict';
 
 var Crawler = require('./crawler'),
-    Product = require('/Users/marcogodinez/dev/sprint3/core/models/product.js');
+    Product = require('/Users/marcogodinez/dev/admin-modules/api/warehouse/models/product.js');
 
 var crawler = new Crawler({
   url: 'http://www.bebe2go.com',

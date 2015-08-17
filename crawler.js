@@ -13,6 +13,8 @@ var Crawler = function (params) {
   this.result = [];
   this.url = params.url;
   this.categories = params.categories;
+  this.model = params.model;
+  this.store = !!params.store;
 };
 
 Crawler.prototype.steal = function (callback) {
@@ -31,7 +33,7 @@ Crawler.prototype._collect = function (index, callback) {
   index = index || 0;
   var collection = this.collections[index];
 
-  if (collection) {
+  if (collection && index < 2) {
     return x(collection.url, '.shopping-item', [{
       title: '.productTitle',
       url: 'a.productTitle@href'
@@ -62,7 +64,7 @@ Crawler.prototype._products = function (index, callback) {
   if (product) {
     return x(product.url, '.shopping-content', [{
       display_name: 'h4',
-      price: 'p.price',
+      unit_price: 'p.price',
       images: ['img@src'],
       description: '.product-desc #tab1 h3',
       short_description: '.product-desc #tab1 p'
@@ -75,10 +77,10 @@ Crawler.prototype._products = function (index, callback) {
         _product.category = product.category;
         this.result.push(_product);
 
-        if (!!this.store && this.model) {
+        if (this.store && this.model) {
           this.model.createAsync(_product)
-            .then(function () {
-              console.log(('Product has been saved' + product._id).green);
+            .then(function (p) {
+              console.log(('Product has been saved: ' + p._id).green);
             })
             .catch(function (e) {
               console.log('Error'.red, e);
