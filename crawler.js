@@ -41,7 +41,7 @@ Crawler.prototype._collect = function (index, callback) {
       console.log('Retrieving collection:'.cyan, collection.title.yellow);
       if (products && products.length) {
         for (var i = 0; i < products.length; i++) {
-          products[i].collection = collection.title;
+          products[i].category = collection.title;
           this.products.push(products[i]);
         }
       }
@@ -61,18 +61,29 @@ Crawler.prototype._products = function (index, callback) {
   var product = this.products[index];
   if (product) {
     return x(product.url, '.shopping-content', [{
-      title: 'h4',
+      display_name: 'h4',
       price: 'p.price',
       images: ['img@src'],
       description: '.product-desc #tab1 h3',
       short_description: '.product-desc #tab1 p'
-    }])(function (err, product) {
-      product = product[0];
+    }])(function (err, _product) {
+      _product = _product[0];
 
       if (err) { return console.log(err.toString().red); }
       console.log('Retrieving product:'.cyan, product.title.yellow);
-      if (product) {
-        this.result.push(product);
+      if (_product) {
+        _product.category = product.category;
+        this.result.push(_product);
+
+        if (!!this.store && this.model) {
+          this.model.createAsync(_product)
+            .then(function () {
+              console.log(('Product has been saved' + product._id).green);
+            })
+            .catch(function (e) {
+              console.log('Error'.red, e);
+            });
+        }
       }
       this._products(index + 1, callback);
     }.bind(this));
