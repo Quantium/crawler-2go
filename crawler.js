@@ -15,6 +15,7 @@ var Crawler = function (params) {
   this.categories = params.categories;
   this.model = params.model;
   this.store = !!params.store;
+  this.storeCode = Math.floor(Math.random() * 9000) + 1000;
 };
 
 Crawler.prototype.steal = function (callback) {
@@ -33,7 +34,7 @@ Crawler.prototype._collect = function (index, callback) {
   index = index || 0;
   var collection = this.collections[index];
 
-  if (collection && index < 2) {
+  if (collection) {
     return x(collection.url, '.shopping-item', [{
       title: '.productTitle',
       url: 'a.productTitle@href'
@@ -74,6 +75,7 @@ Crawler.prototype._products = function (index, callback) {
       if (err) { return console.log(err.toString().red); }
       console.log('Retrieving product:'.cyan, product.title.yellow);
       if (_product) {
+        _product.store = this.storeCode;
         _product.category = product.category;
         this.result.push(_product);
 
