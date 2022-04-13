@@ -20,7 +20,7 @@
     "gulp": "^3.9.0",
     "gulp-jshint": "^2.0.1",
     "jshint-stylish": "^2.0.1",
-    "mongoose": "^4.1.2",
+    "mongoose": "^5.7.3",
     "rc": "^1.1.0",
     "simplecrawler": "^0.5.2",
     "x-ray": "^2.0.2",
